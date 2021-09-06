@@ -292,17 +292,11 @@
         <p> The blueprint library changes have been split into several steps. The reason is, that there was a big motivation to do the integration with the new quickbar (final version introduced in <a href="https://www.factorio.com/blog/post/fff-278">FFF-278</a>) in time for 0.17.0, while the other changes can be done after. The thing with the quickbar is, that it is quite a big change to one of the most used tools in the game and people generally don't like change even when it is for the better. To minimize the hate of the change, we need to "sell it properly". By that, we should provide as many of the positive aspects of the new quickbar at the time of its introduction. </p>
         <p> So the change that is already implemented and working for 0.17 is the ability to put blueprints/books into the quick bar in a way that the quick bar is linked directly to the blueprint library window, so you don't need to have the physical blueprint items in your inventory. The other change is, that picking a blueprint from the blueprint library and then pressing Q will just dismiss it, instead of silently pushing it to your inventory. This works the same as the clipboard described in <a href="https://www.factorio.com/blog/post/fff-255">FFF-255</a>. You can still explicitly insert the blueprint from the library to an inventory slot, but if you just pick it, use it, and press Q, it goes away. </p>
         <p> In addition to this, other changes related to the blueprint library will follow soon after 0.17.0. The first thing is the change of how the GUI looks: </p>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-library-grid-view.png" width="900px" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-library-grid-view.png" width="900px" />
         <p> We will also allow to switch between grid and list view. It mainly provides a way to nicely see the longer names of the blueprint. We noticed that players try to put a large amount of info about a blueprint in its name, so we are planning to add a possibility to write a textual description of the blueprint. </p>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-library-list-view.png" width="900px" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-library-list-view.png" width="900px" />
         <p> The last big change is to allow to put blueprint books into blueprint books, allowing better organisation. Basically like a directory structure. Whenever a blueprint/book is opened, we plan to show its current location, so the player knows exactly what is going on. </p>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-book.png" width="900px" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-blueprint-book.png" width="900px" />
         <h3>The hand</h3>
         <p> Has it ever happened to you, that you have robots trying to put things into your full inventory, while you pick an item from it to build something, and then you just can't put it back, as the diligent robots just filled the last slot in your inventory by whatever they are trying to give to you? Wood from tree removal is the most frequent thing in my case. </p>
         <p> This was annoying in 0.16 from time to time, but with the new quickbar, it started to happen even more, as now, you have only one inventory, and no reserved slots in the quickbar. To solve that, we just extended the "principal" of the hand. When you pick something from the inventory, the hand icon appears on the slot. As long as you hold the thing in your cursor, the hand stays there, and prevents other things from being inserted there. This way, you should always be able to return the currently selected item into your inventory as long as you didn't get it from external source like a chest. </p>
@@ -358,9 +352,7 @@
         <p> In order to ensure a decent starting area, the elevation generator always makes a plateau there (so you'll never spawn in the middle of the ocean), and a lake (so you can get a power plant running). Depending on what's going on outside of that plateau, this sometimes resulted in a circular ring of cliffs around the starting point, which looked very artificial, and we wanted to reduce that effect. </p>
         <p> In the process of solving that problem I created another custom generator for debugging purposes. This one simply generated that starting area plateau in an endless ocean. I don't actually remember how this was useful for debugging, but at one point I directed Twinsen to look at it to illustrate the mechanics behind generating the starting area. </p>
         <p> The rest of the team liked that setting so much that we're making it a player-selectable option. So in 0.17 you'll get to pick between the 'Normal' map type, which resembles that from 0.12, and 'Island', which gives you a single large-ish island at the starting point. There's a slider to let you change the size of the island(s). </p>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-island.png" width="900" height="900" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-island.png" width="900" height="900" />
         <p> Maps with multiple starting points will have multiple islands. </p>
         <p>
             <img src="https://cdn.factorio.com/assets/img/blog/fff-282-islands.png" width="900" height="900" />
@@ -370,14 +362,10 @@
         <p> Mods will be able to add their own 'map types' to the map type drop-down, too. If you really liked the shape of landmasses in 0.16 and want to be able to continue creating new maps with it, please let us know on the forum. </p>
         <h2>High-res accumulators <span size="2">(Ernestas, Albert)</span>
         </h2>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-accumulator.gif" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-accumulator.gif" />
         <p> The design of the accumulator has been always good. The 4 very visible cylinders, looking like giant batteries, Tesla poles and the electric beams perfectly telegraphed its function in terms of style and readability. That’s why for the high-res conversion we were very careful about keeping this entity as it was. </p>
         <p> The only thing that was a bit disturbing (for some) are the poles crossing to each other when more than one accumulator is placed in a row. So we decided to fix it (or break it). The rest of the work was making the entity compatible for the actual look of the game. But in essence accumulators are still the same. </p>
-        <p>
-            <img src="https://cdn.factorio.com/assets/img/blog/fff-282-accumulator-comparison.png" width="900px" />
-        </p>
+        <img src="https://cdn.factorio.com/assets/img/blog/fff-282-accumulator-comparison.png" width="900px" />
         <p> As always, let us know what you think on our <a href="https://forums.factorio.com/64912">forum</a>. </p>
     </div>
 </div>

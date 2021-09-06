@@ -444,13 +444,14 @@ Readability.prototype = {
     var blockTagsToSimplify = ["DIV", "SECTION", "ARTICLE", "MAIN", "P"];
     var inlineTagsToSimplify = ["A", "U", "I", "B"];
     var blockTags = [...blockTagsToSimplify, "HEADER", "FIGURE", "UL", "OL", "TABLE", "PRE", "H2", "H3", "H4", "H5", "H6"];
+    var blockLikeTag = ["IMG"];
 
     while (node) {
       if (node.parentNode && blockTagsToSimplify.includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
         if (this._isElementWithoutContent(node)) {
           node = this._removeAndGetNext(node);
           continue;
-        } else if (this._hasSingleTagInsideElement(node, ...blockTags)) {
+        } else if (this._hasSingleTagInsideElement(node, ...blockTags, ...blockLikeTag)) {
           var child = node.children[0];
           for (var i = 0; i < node.attributes.length; i++) {
             child.setAttribute(node.attributes[i].name, node.attributes[i].value);
@@ -459,7 +460,7 @@ Readability.prototype = {
           node = child;
           continue;
         }
-      } else if (node.tagName === "SPAN" && this._hasSingleTagInsideElement(node, "SPAN", ...inlineTagsToSimplify, ...blockTags)) {
+      } else if (node.tagName === "SPAN" && this._hasSingleTagInsideElement(node, "SPAN", ...inlineTagsToSimplify, ...blockTags, ...blockLikeTag)) {
         var spanChild = node.children[0];
         node.parentNode.replaceChild(spanChild, node);
         node = spanChild.parentNode;

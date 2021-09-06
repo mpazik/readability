@@ -9,8 +9,7 @@
         <p id="1efa"> What kind of resources does your application need? In most cases, we focus on memory and CPU. Good monitoring of these two elements is mandatory for an application running on production. </p>
         <p id="dce9"> For memory, constant monitoring is the best practice to track the worst developer nightmare a.k.a memory leak. </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/3788/1*5o3M5niyi911waUrKWVZ0Q.png" width="1894" height="970" role="presentation" data-old-src="https://miro.medium.com/max/60/1*5o3M5niyi911waUrKWVZ0Q.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/3788/1*5o3M5niyi911waUrKWVZ0Q.png" width="1894" height="970" role="presentation" data-old-src="https://miro.medium.com/max/60/1*5o3M5niyi911waUrKWVZ0Q.png?q=20" />
             <figcaption> Memory leak in action </figcaption>
         </figure>
         <p id="69dd"> A good way to debug memory leak is a memory dump and/or memory sampling but this is not the subject. </p>
@@ -20,8 +19,7 @@
         </blockquote>
         <p id="40e6"> Most of the time we monitor this resource with a simple solution allowing us to get a graph representing CPU consumption over time. If we want to be reactive we add an alarm, based on a threshold, to warn us when CPU usage is too high. </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/1994/1*8uOdeOfnUzTaFIY1r7oAMg.png" width="997" height="230" role="presentation" data-old-src="https://miro.medium.com/max/60/1*8uOdeOfnUzTaFIY1r7oAMg.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1994/1*8uOdeOfnUzTaFIY1r7oAMg.png" width="997" height="230" role="presentation" data-old-src="https://miro.medium.com/max/60/1*8uOdeOfnUzTaFIY1r7oAMg.png?q=20" />
             <figcaption> Basic CPU monitoring </figcaption>
         </figure>
         <p id="0728"> And what next? We don’t have data about the state of the instance when the CPU usage has increased. So we can’t determine why we had this peak, at least not without an important time of debugging, comparing log, etc. This is exactly why you need to use CPU profiling. </p>
@@ -37,24 +35,21 @@
         <p id="66c8"> The first command just executes your application, the argument just tells to V8 engine to collect data. When you stop your script all information is stored in a file. </p>
         <pre><span id="16bd">node --prof app.js</span></pre>
         <figure>
-            <p><img src="https://miro.medium.com/max/1698/1*e7gjTlzi55udTXbbPeEs2A.png" width="849" height="534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*e7gjTlzi55udTXbbPeEs2A.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1698/1*e7gjTlzi55udTXbbPeEs2A.png" width="849" height="534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*e7gjTlzi55udTXbbPeEs2A.png?q=20" />
             <figcaption> Output of — prof </figcaption>
         </figure>
         <p id="57a6"> It is not very clear, is it? </p>
         <p id="abed"> That’s why you just need to run this second command to transform your raw file into a more human-readable output. </p>
         <pre><span id="061c">node --prof-process isolate-0xnnnnn-v8.log &gt; processed.txt</span></pre>
         <figure>
-            <p><img src="https://miro.medium.com/max/1508/1*JJkRh7JihTUo2apW_9ZXAQ.png" width="754" height="306" role="presentation" data-old-src="https://miro.medium.com/max/60/1*JJkRh7JihTUo2apW_9ZXAQ.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1508/1*JJkRh7JihTUo2apW_9ZXAQ.png" width="754" height="306" role="presentation" data-old-src="https://miro.medium.com/max/60/1*JJkRh7JihTUo2apW_9ZXAQ.png?q=20" />
             <figcaption> The output of — prof-process </figcaption>
         </figure>
         <p id="85fa"> It seems better, here you can determine which function consumes the most of CPU (percentage of the time). </p>
         <h2 id="9e54"> ClinicJs </h2>
         <p id="176a"> ClinicJs is a set of tools that allow you to collect data and display performance charts. With “clinic flame” you can generate a flame graph based on CPU consumption. </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/5760/1*6wi5BlNNnykjZs0PufrvLQ.png" width="2880" height="1534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*6wi5BlNNnykjZs0PufrvLQ.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/5760/1*6wi5BlNNnykjZs0PufrvLQ.png" width="2880" height="1534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*6wi5BlNNnykjZs0PufrvLQ.png?q=20" />
             <figcaption> Flame chart </figcaption>
         </figure>
         <p id="5347"> But once again, you have to stop your app, launch the tool, then terminate the script in order to display the graph (files are generated on the disk). </p>
@@ -93,8 +88,7 @@
         <h2 id="848b"> And now, CPU profiling on-demand! </h2>
         <p id="6933"> We have an API that we want to test with autocannon tool. At this step, our project is able to serve around 200 requests in 20 seconds. There is probably a mistake somewhere in the code which slows down our application. </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/1694/1*cS9IXYGfMmgxaAUlC7oqOQ.png" width="847" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*cS9IXYGfMmgxaAUlC7oqOQ.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1694/1*cS9IXYGfMmgxaAUlC7oqOQ.png" width="847" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*cS9IXYGfMmgxaAUlC7oqOQ.png?q=20" />
         </figure>
         <p id="fb78"> But now, what if we want to trigger a CPU profiling remotely (without ssh connection to the server)? It’s possible using Websocket, SSE or any other technology to send a message to your instance. </p>
         <p id="2c91"> Here is a simple example of a server using the “ws” module to send a message to a unique instance. </p>
@@ -127,8 +121,7 @@
         <p id="48d9"> In our example, every request try to generate a token. For this purpose, it calls the function pbkdf2 which is CPU consuming. Our CPU profile looks like a sequence of big blocks of time, like if the last function in the call stack takes 99% of the total time. </p>
         <p id="d62c"> The CPU profiling after optimizations, with the same time range. </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/1860/1*87KlGgfbuWP38nAaQaj3xw.png" width="930" height="523" role="presentation" data-old-src="https://miro.medium.com/max/60/1*87KlGgfbuWP38nAaQaj3xw.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1860/1*87KlGgfbuWP38nAaQaj3xw.png" width="930" height="523" role="presentation" data-old-src="https://miro.medium.com/max/60/1*87KlGgfbuWP38nAaQaj3xw.png?q=20" />
             <figcaption> CPU profiling after optimizations </figcaption>
         </figure>
         <p id="10ee"> As you can notice, we have to zoom to the profile if we want to see the call stack, because after optimizations the API was able to take a lot more traffic. Now every function in the call stack looks like a microtask. </p>
@@ -136,8 +129,7 @@
     <div>
         <p id="10f1"> And now our application is able to serve more than 200,000 requests in 20 seconds; <strong>we increased the performance by a factor of 100k</strong>! </p>
         <figure>
-            <p><img src="https://miro.medium.com/max/1690/1*kfOK60PtmWx6iP681-qRcg.png" width="845" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*kfOK60PtmWx6iP681-qRcg.png?q=20" />
-            </p>
+            <img src="https://miro.medium.com/max/1690/1*kfOK60PtmWx6iP681-qRcg.png" width="845" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*kfOK60PtmWx6iP681-qRcg.png?q=20" />
         </figure>
         <h2 id="98b9"> More than just CPU profiling </h2>
         <p id="e1ad"> With the inspector module, you can do much more than just CPU profiling, here is a non-exhaustive list: </p>

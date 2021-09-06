@@ -1,6 +1,6 @@
 {
   "name": "docland-readability",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "index.js",
   "types": "index.d.ts",
