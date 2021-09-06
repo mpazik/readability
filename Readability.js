@@ -238,6 +238,17 @@ Readability.prototype = {
     }
   },
 
+  _removeCommentNodesRecursively: function (node) {
+    for (var i = node.childNodes.length - 1; i >= 0; i--) {
+      var child = node.childNodes[i];
+      if (child.nodeType === child.COMMENT_NODE) {
+        node.removeChild(child);
+      } else if (child.nodeType === child.ELEMENT_NODE) {
+        this._removeCommentNodesRecursively(child);
+      }
+    }
+  },
+
   /**
    * Iterate over a NodeList, which doesn't natively fully implement the Array
    * interface.
@@ -541,6 +552,7 @@ Readability.prototype = {
 
     // Remove all style tags in head
     this._removeNodes(this._getAllNodesWithTag(doc, ["style"]));
+    this._removeCommentNodesRecursively(doc);
 
     this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
 

@@ -179,17 +179,6 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
   });
 }
 
-function removeCommentNodesRecursively(node) {
-  for (var i = node.childNodes.length - 1; i >= 0; i--) {
-    var child = node.childNodes[i];
-    if (child.nodeType === child.COMMENT_NODE) {
-      node.removeChild(child);
-    } else if (child.nodeType === child.ELEMENT_NODE) {
-      removeCommentNodesRecursively(child);
-    }
-  }
-}
-
 describe("Readability API", function() {
   describe("#constructor", function() {
     var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
@@ -278,11 +267,9 @@ describe("Test pages", function() {
       var uri = "http://fakehost/test/page.html";
 
       runTestsWithItems("jsdom", function(source) {
-        var doc = new JSDOM(source, {
+        return new JSDOM(source, {
           url: uri,
         }).window.document;
-        removeCommentNodesRecursively(doc);
-        return doc;
       }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
 
       runTestsWithItems("JSDOMParser", function(source) {
