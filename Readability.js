@@ -136,7 +136,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     tokenize: /\W+/g,
     whitespace: /^\s*$/,
-    hasContent: /\S$/,
+    hasContent: /\S/,
     hashUrl: /^#.+/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
