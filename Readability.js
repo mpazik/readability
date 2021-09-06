@@ -441,13 +441,14 @@ Readability.prototype = {
 
   _simplifyNestedElements: function(articleContent) {
     var node = articleContent;
+    let blockTags = ["DIV", "SECTION", "ARTICLE", "MAIN"];
 
     while (node) {
-      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
+      if (node.parentNode && blockTags.includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
         if (this._isElementWithoutContent(node)) {
           node = this._removeAndGetNext(node);
           continue;
-        } else if (this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION")) {
+        } else if (this._hasSingleTagInsideElement(node, ...blockTags)) {
           var child = node.children[0];
           for (var i = 0; i < node.attributes.length; i++) {
             child.setAttribute(node.attributes[i].name, node.attributes[i].value);
@@ -1649,9 +1650,9 @@ Readability.prototype = {
    * @param Element
    * @param string tag of child element
   **/
-  _hasSingleTagInsideElement: function(element, tag) {
+  _hasSingleTagInsideElement: function(element, ...tags) {
     // There should be exactly 1 element child with given tag
-    if (element.children.length != 1 || element.children[0].tagName !== tag) {
+    if (!(element.children.length === 1) || !tags.includes(element.children[0].tagName)) {
       return false;
     }
 
