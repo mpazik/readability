@@ -65,12 +65,10 @@
         <p> The simplest scenario is a single developer working across two computers. Say you’re working on code that must be tested on a remote test server, probably in a rack somewhere, only accessible by SSH, and running an “enterprise-grade” (out-of-date) OS. But you probably prefer to write code locally: everything is setup the way you like it, and you can use your preferred editor, IDE, merge/diff tools, etc. </p>
         <p> Traditionally, your options are limited: either </p>
         <blockquote>
-            <div>
-                <ul>
-                    <li>(ab)use your source control system by committing half-working code in order to get it onto the remote test server, or </li>
-                    <li>go behind source control’s back by using <tt><span>rsync</span></tt> (or similar) to transfer your code back-and-forth until it is ready to commit </li>
-                </ul>
-            </div>
+            <ul>
+                <li>(ab)use your source control system by committing half-working code in order to get it onto the remote test server, or </li>
+                <li>go behind source control’s back by using <tt><span>rsync</span></tt> (or similar) to transfer your code back-and-forth until it is ready to commit </li>
+            </ul>
         </blockquote>
         <p> The former is less bad with distributed version control systems like Mercurial, but it’s still far from ideal. (One important version control “best practice” is that every commit should make things just a little bit better, i.e. you should never commit code that is worse than what came before.) The latter, avoiding version control entirely, means that you’re walking a tightrope without a safety net. One accidental <tt><span>rsync</span></tt> in the wrong direction could destroy hours of work. </p>
         <p> Using Mercurial with <tt><span>evolve</span></tt> to share mutable history solves these problems. As with single-repository <tt><span>evolve</span></tt>, you can commit whenever the code is demonstrably better, even if all the tests aren’t passing yet—just <tt><span>hg</span> <span>amend</span></tt> when they are. And you can transfer those half-baked changesets between repositories to try things out on your test server before anything is carved in stone. </p>
@@ -91,43 +89,34 @@
                 </h3>
                 <p> We’ll work through an example with three local repositories, although in the real world they’d most likely be on three different computers. First, the <tt><span>public</span></tt> repository is where tested, polished changesets live, and it is where you synchronize with the rest of your team. </p>
                 <p> We’ll need two clones where work gets done, <tt><span>test-repo</span></tt> and <tt><span>dev-repo</span></tt>: </p>
-                <div>
-                    <pre>$ hg clone public test-repo
+                <pre>$ hg clone public test-repo
 updating to branch default
 0 files updated, 0 files merged, 0 files removed, 0 files unresolved
 $ hg clone test-repo dev-repo
 updating to branch default
 0 files updated, 0 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
                 <p>
                     <tt><span>dev-repo</span></tt> is your local machine, with GUI merge tools and IDEs and everything configured just the way you like it. <tt><span>test-repo</span></tt> is the test server in a rack somewhere behind SSH. So for the most part, we’ll develop in <tt><span>dev-repo</span></tt>, push to <tt><span>test-repo</span></tt>, test and polish there, and push to <tt><span>public</span></tt>.
                 </p>
                 <p> The key to shared mutable history is to make the target repository, in this case <tt><span>test-repo</span></tt>, non-publishing. And, of course, we have to enable the <tt><span>evolve</span></tt> extension in both <tt><span>test-repo</span></tt> and <tt><span>dev-repo</span></tt>. </p>
                 <p> First, edit the configuration for <tt><span>test-repo</span></tt>: </p>
-                <div>
-                    <pre>$ hg -R test-repo config --edit --local
+                <pre>$ hg -R test-repo config --edit --local
 </pre>
-                </div>
                 <p> and add </p>
-                <div>
-                    <pre>[phases]
+                <pre>[phases]
 publish = false
 
 [extensions]
 evolve =
 </pre>
-                </div>
                 <p> Then edit the configuration for <tt><span>dev-repo</span></tt>: </p>
-                <div>
-                    <pre>$ hg -R dev-repo config --edit --local
+                <pre>$ hg -R dev-repo config --edit --local
 </pre>
-                </div>
                 <p> and add </p>
                 <p> Keep in mind that in real life, these repositories would probably be on separate computers, so you’d have to login to each one to configure each repository. </p>
                 <p> To start things off, let’s make one public, immutable changeset: </p>
-                <div>
-                    <pre>$ cd test-repo
+                <pre>$ cd test-repo
 $ echo 'my new project' &gt; file1
 $ hg add file1
 $ hg commit -m 'create new project'
@@ -135,66 +124,53 @@ $ hg push
 [...]
 added 1 changesets with 1 changes to 1 files
 </pre>
-                </div>
                 <p> and pull that into the development repository: </p>
-                <div>
-                    <pre>$ cd ../dev-repo
+                <pre>$ cd ../dev-repo
 $ hg pull -u
 [...]
 added 1 changesets with 1 changes to 1 files
 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
             </div>
             <div id="example-2-amend-again-locally">
                 <h3>
                     <a href="#id9">Example 2: Amend again, locally</a><a href="#example-2-amend-again-locally" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> This process can repeat. Perhaps you figure out a more elegant fix to the bug, and want to mutate history so nobody ever knows you had a less-than-perfect idea. We’ll implement it locally in <tt><span>dev-repo</span></tt> and push to <tt><span>test-repo</span></tt>: </p>
-                <div>
-                    <pre>$ echo 'Fix, fix, and fix.' &gt; file1
+                <pre>$ echo 'Fix, fix, and fix.' &gt; file1
 $ hg amend
 $ hg push
 </pre>
-                </div>
                 <p> This time around, the temporary amend commit is in <tt><span>dev-repo</span></tt>, and it is not transferred to <tt><span>test-repo</span></tt>—the same as before, just in the opposite direction. Figure 4 shows the two repositories after amending in <tt><span>dev-repo</span></tt> and pushing to <tt><span>test-repo</span></tt>. </p>
                 <blockquote>
                     <p> [figure SG04: each repo has one temporary amend commit, but they’re different in each one] </p>
                 </blockquote>
                 <p> Let’s hop over to <tt><span>test-repo</span></tt> to test the more elegant fix: </p>
-                <div>
-                    <pre>$ cd ../test-repo
+                <pre>$ cd ../test-repo
 $ hg update
 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
                 <p> This time, all the tests pass, so no further amending is required. This bug fix is finished, so we push it to the public repository: </p>
-                <div>
-                    <pre>$ hg push
+                <pre>$ hg push
 [...]
 added 1 changesets with 1 changes to 1 files
 </pre>
-                </div>
                 <p> Note that only one changeset—the final version, after two amendments—was actually pushed. Again, Mercurial doesn’t transfer hidden changesets on push and pull. </p>
                 <p> So the picture in <tt><span>public</span></tt> is much simpler than in either <tt><span>dev-repo</span></tt> or <tt><span>test-repo</span></tt>. Neither of our missteps nor our amendments are publicly visible, just the final, beautifully polished changeset: </p>
                 <blockquote>
                     <p> [figure SG05: public repo with rev 0:0dc9, 1:de61, both public] </p>
                 </blockquote>
                 <p> There is one important step left to do. Because we pushed from <tt><span>test-repo</span></tt> to <tt><span>public</span></tt>, the pushed changeset is in <em>public</em> phase in those two repositories. But <tt><span>dev-repo</span></tt> has been out-of-the-loop; changeset de61 is still <em>draft</em> there. If we’re not careful, we might mutate history in <tt><span>dev-repo</span></tt>, obsoleting a changeset that is already public. Let’s avoid that situation for now by pushing up to <tt><span>dev-repo</span></tt>: </p>
-                <div>
-                    <pre>$ hg push ../dev-repo
+                <pre>$ hg push ../dev-repo
 pushing to ../dev-repo
 searching for changes
 no changes found
 </pre>
-                </div>
                 <p> Even though no <em>changesets</em> were pushed, Mercurial still pushed obsolescence markers and phase changes to <tt><span>dev-repo</span></tt>. </p>
                 <p> A final note: since this fix is now <em>public</em>, it is immutable. It’s no longer possible to amend it: </p>
-                <div>
-                    <pre>$ hg amend -m 'fix bug 37'
+                <pre>$ hg amend -m 'fix bug 37'
 abort: cannot amend public changesets
 </pre>
-                </div>
                 <p> This is, after all, the whole point of Mercurial’s phases: to prevent rewriting history that has already been published. </p>
             </div>
         </div>
@@ -210,8 +186,7 @@ abort: cannot amend public changesets
                     <a href="#id11">Setting up</a><a href="#id2" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> To demonstrate, let’s start with the <tt><span>public</span></tt> repository as we left it in the last example, with two immutable changesets (figure 5 above). We’ll clone a <tt><span>review</span></tt> repository from it, and then Alice and Bob will both clone from <tt><span>review</span></tt>. </p>
-                <div>
-                    <pre>$ hg clone public review
+                <pre>$ hg clone public review
 updating to branch default
 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
 $ hg clone review alice
@@ -221,18 +196,13 @@ $ hg clone review bob
 updating to branch default
 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
                 <p> We need to configure Alice’s and Bob’s working repositories to enable <tt><span>evolve</span></tt>. First, edit Alice’s configuration with </p>
-                <div>
-                    <pre>$ hg -R alice config --edit --local
+                <pre>$ hg -R alice config --edit --local
 </pre>
-                </div>
                 <p> and add </p>
                 <p> Then edit Bob’s repository configuration: </p>
-                <div>
-                    <pre>$ hg -R bob config --edit --local
+                <pre>$ hg -R bob config --edit --local
 </pre>
-                </div>
                 <p> and add the same text. </p>
             </div>
             <div id="example-3-alice-commits-and-amends-a-draft-fix">
@@ -240,33 +210,27 @@ updating to branch default
                     <a href="#id12">Example 3: Alice commits and amends a draft fix</a><a href="#example-3-alice-commits-and-amends-a-draft-fix" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> We’ll follow Alice working on a bug fix. We’re going to use bookmarks to make it easier to understand multiple branch heads in the <tt><span>review</span></tt> repository, so Alice starts off by creating a bookmark and committing her first attempt at a fix: </p>
-                <div>
-                    <pre>$ hg bookmark bug15
+                <pre>$ hg bookmark bug15
 $ echo 'fix' &gt; file2
 $ hg commit -A -u alice -m 'fix bug 15 (v1)'
 adding file2
 </pre>
-                </div>
                 <p> Note the unorthodox “(v1)” in the commit message. We’re just using that to make this tutorial easier to follow; it’s not something we’d recommend in real life. </p>
                 <p> Of course Alice wouldn’t commit unless her fix worked to her satisfaction, so it must be time to solicit a code review. She does this by pushing to the <tt><span>review</span></tt> repository: </p>
-                <div>
-                    <pre>$ hg push -B bug15
+                <pre>$ hg push -B bug15
 [...]
 added 1 changesets with 1 changes to 1 files
 exporting bookmark bug15
 </pre>
-                </div>
                 <p> (The use of <tt><span>-B</span></tt> is important to ensure that we only push the bookmarked head, and that the bookmark itself is pushed. See this <a href="http://mercurial.aragost.com/kick-start/en/bookmarks/">guide to bookmarks</a>, especially the <a href="http://mercurial.aragost.com/kick-start/en/bookmarks/#sharing-bookmarks">Sharing Bookmarks</a> section, if you’re not familiar with bookmarks.) </p>
                 <p> Some time passes, and Alice receives her code review. As a result, Alice revises her fix and submits it for a second review: </p>
-                <div>
-                    <pre>$ echo 'Fix.' &gt; file2
+                <pre>$ echo 'Fix.' &gt; file2
 $ hg amend -m 'fix bug 15 (v2)'
 $ hg push
 [...]
 added 1 changesets with 1 changes to 1 files (+1 heads)
 updating bookmark bug15
 </pre>
-                </div>
                 <p> Figure 6 shows the state of the <tt><span>review</span></tt> repository at this point. </p>
                 <blockquote>
                     <p> [figure SG06: rev 2:fn1e is Alice’s obsolete v1, rev 3:cbdf is her v2; both children of rev 1:de61] </p>
@@ -278,8 +242,7 @@ updating bookmark bug15
                     <a href="#id13">Example 4: Bob implements and publishes a new feature</a><a href="#example-4-bob-implements-and-publishes-a-new-feature" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> Meanwhile, Bob has been working on a new feature. Like Alice, he’ll use a bookmark to track his work, and he’ll push that bookmark to the <tt><span>review</span></tt> repository, so that reviewers know which changesets to review. </p>
-                <div>
-                    <pre>$ cd ../bob
+                <pre>$ cd ../bob
 $ echo 'stuff' &gt; file1
 $ hg bookmark featureX
 $ hg commit -u bob -m 'implement feature X (v1)'          # rev 4:1636
@@ -288,38 +251,29 @@ $ hg push -B featureX
 added 1 changesets with 1 changes to 1 files (+1 heads)
 exporting bookmark featureX
 </pre>
-                </div>
                 <p> When Bob receives his code review, he improves his implementation a bit, amends, and submits the resulting changeset for review: </p>
-                <div>
-                    <pre>$ echo 'do stuff' &gt; file1
+                <pre>$ echo 'do stuff' &gt; file1
 $ hg amend -m 'implement feature X (v2)'                  # rev 5:0eb7
 $ hg push
 [...]
 added 1 changesets with 1 changes to 1 files (+1 heads)
 updating bookmark featureX
 </pre>
-                </div>
                 <p> Unfortunately, that still doesn’t pass muster. Bob’s reviewer insists on proper capitalization and punctuation. </p>
-                <div>
-                    <pre>$ echo 'Do stuff.' &gt; file1
+                <pre>$ echo 'Do stuff.' &gt; file1
 $ hg amend -m 'implement feature X (v3)'                  # rev 6:540b
 </pre>
-                </div>
                 <p> On the bright side, the second review said, “Go ahead and publish once you fix that.” So Bob immediately publishes his third attempt: </p>
-                <div>
-                    <pre>$ hg push ../public
+                <pre>$ hg push ../public
 [...]
 added 1 changesets with 1 changes to 1 files
 </pre>
-                </div>
                 <p> It’s not enough just to update <tt><span>public</span></tt>, though! Other people also use the <tt><span>review</span></tt> repository, and right now it doesn’t have Bob’s latest amendment (“v3”, revision 6:540b), nor does it know that the precursor of that changeset (“v2”, revision 5:0eb7) is obsolete. Thus, Bob pushes to <tt><span>review</span></tt> as well: </p>
-                <div>
-                    <pre>$ hg push ../review
+                <pre>$ hg push ../review
 [...]
 added 1 changesets with 1 changes to 1 files (+1 heads)
 updating bookmark featureX
 </pre>
-                </div>
                 <p> Figure 7 shows the result of Bob’s work in both <tt><span>review</span></tt> and <tt><span>public</span></tt>. </p>
                 <blockquote>
                     <p> [figure SG07: review includes Alice’s draft work on bug 15, as well as Bob’s v1, v2, and v3 changes for feature X: v1 and v2 obsolete, v3 public. public contains only the final, public implementation of feature X] </p>
@@ -331,17 +285,14 @@ updating bookmark featureX
                     <a href="#id14">Example 5: Alice integrates and publishes</a><a href="#example-5-alice-integrates-and-publishes" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> Finally, Alice gets back from lunch and sees that the carrier pigeon with her second review has arrived (or maybe it’s in her email inbox). Alice’s reviewer approved her amended changeset, so she pushes it to <tt><span>public</span></tt>: </p>
-                <div>
-                    <pre>$ hg push ../public
+                <pre>$ hg push ../public
 [...]
 remote has heads on branch 'default' that are not known locally: 540ba8f317e6
 abort: push creates new remote head cbdfbd5a5db2!
 (pull and merge or see "hg help push" for details about pushing new heads)
 </pre>
-                </div>
                 <p> Oops! Bob has won the race to push first to <tt><span>public</span></tt>. So Alice needs to integrate with Bob: let’s pull his changeset(s) and see what the branch heads are. </p>
-                <div>
-                    <pre>$ hg pull ../public
+                <pre>$ hg pull ../public
 [...]
 added 1 changesets with 1 changes to 1 files (+1 heads)
 (run 'hg heads' to see heads, 'hg merge' to merge)
@@ -351,10 +302,8 @@ o  5:540ba8f317e6  (bob)
 | @  4:cbdfbd5a5db2  (alice)
 |/
 </pre>
-                </div>
                 <p> We’ll assume Alice and Bob are perfectly comfortable with rebasing changesets. (After all, they’re already using mutable history in the form of <tt><span>amend</span></tt>.) So Alice rebases her changeset on top of Bob’s and publishes the result: </p>
-                <div>
-                    <pre>$ hg rebase -d 5
+                <pre>$ hg rebase -d 5
 $ hg push ../public
 [...]
 added 1 changesets with 1 changes to 1 files
@@ -363,7 +312,6 @@ $ hg push ../review
 added 1 changesets with 0 changes to 0 files
 updating bookmark bug15
 </pre>
-                </div>
                 <p> The result, in both <tt><span>review</span></tt> and <tt><span>public</span></tt> repositories, is shown in figure 8. </p>
                 <blockquote>
                     <p> [figure SG08: review shows v1 and v2 of Alice’s fix, then v1, v2, v3 of Bob’s feature, finally Alice’s fix rebased onto Bob’s. public just shows the final public version of each changeset] </p>
@@ -383,8 +331,7 @@ updating bookmark bug15
                 </h3>
                 <p> For these examples, we’re going to use a slightly different workflow: as before, Alice and Bob share a <tt><span>public</span></tt> repository. But this time there is no <tt><span>review</span></tt> repository. Instead, Alice and Bob put on their cowboy hats, throw good practice to the wind, and pull directly from each other’s working repositories. </p>
                 <p> So we throw away everything except <tt><span>public</span></tt> and reclone: </p>
-                <div>
-                    <pre>$ rm -rf review alice bob
+                <pre>$ rm -rf review alice bob
 $ hg clone public alice
 updating to branch default
 2 files updated, 0 files merged, 0 files removed, 0 files unresolved
@@ -392,27 +339,20 @@ $ hg clone public bob
 updating to branch default
 2 files updated, 0 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
                 <p> Once again we have to configure their repositories: enable <tt><span>evolve</span></tt> and (since Alice and Bob will be pulling directly from each other) make their repositories non-publishing. Edit Alice’s configuration: </p>
-                <div>
-                    <pre>$ hg -R alice config --edit --local
+                <pre>$ hg -R alice config --edit --local
 </pre>
-                </div>
                 <p> and add </p>
-                <div>
-                    <pre>[extensions]
+                <pre>[extensions]
 rebase =
 evolve =
 
 [phases]
 publish = false
 </pre>
-                </div>
                 <p> Then edit Bob’s repository configuration: </p>
-                <div>
-                    <pre>$ hg -R bob config --edit --local
+                <pre>$ hg -R bob config --edit --local
 </pre>
-                </div>
                 <p> and add the same text. </p>
             </div>
             <div id="example-6-divergent-changesets">
@@ -421,51 +361,41 @@ publish = false
                 </h3>
                 <p> When an obsolete changeset has two successors, those successors are <em>divergent</em>. One way to get into such a situation is by failing to communicate with your teammates. Let’s see how that might happen. </p>
                 <p> First, we’ll have Bob commit a bug fix that could still be improved: </p>
-                <div>
-                    <pre>$ cd bob
+                <pre>$ cd bob
 $ echo 'pretty good fix' &gt;&gt; file1
 $ hg commit -u bob -m 'fix bug 24 (v1)'                   # rev 4:2fe6
 </pre>
-                </div>
                 <p> Since Alice and Bob are now in cowboy mode, Alice pulls Bob’s draft changeset and amends it herself. </p>
-                <div>
-                    <pre>$ cd ../alice
+                <pre>$ cd ../alice
 $ hg pull -u ../bob
 [...]
 added 1 changesets with 1 changes to 1 files
 $ echo 'better fix (alice)' &gt;&gt; file1
 $ hg amend -u alice -m 'fix bug 24 (v2 by alice)'
 </pre>
-                </div>
                 <p> But Bob has no idea that Alice just did this. (See how important good communication is?) So he implements a better fix of his own: </p>
-                <div>
-                    <pre>$ cd ../bob
+                <pre>$ cd ../bob
 $ echo 'better fix (bob)' &gt;&gt; file1
 $ hg amend -u bob -m 'fix bug 24 (v2 by bob)'             # rev 6:a360
 </pre>
-                </div>
                 <p> At this point, the divergence exists, but only in theory: Bob’s original changeset, 4:2fe6, is obsolete and has two successors. But those successors are in different repositories, so the trouble is not visible to anyone yet. It will be as soon as Bob pulls from Alice’s repository (or vice-versa). </p>
-                <div>
-                    <pre>$ hg pull ../alice
+                <pre>$ hg pull ../alice
 [...]
 added 1 changesets with 1 changes to 2 files (+1 heads)
 (run 'hg heads' to see heads, 'hg merge' to merge)
 2 new divergent changesets
 </pre>
-                </div>
                 <p> Figure 9 shows the situation in Bob’s repository. </p>
                 <blockquote>
                     <p> [figure SG09: Bob’s repo with 2 heads for the 2 divergent changesets, 6:a360 and 7:e3f9; wc is at 6:a360; both are successors of obsolete 4:2fe6, hence divergence] </p>
                 </blockquote>
                 <p> Now we need to get out of trouble. As usual, the answer is to evolve history. </p>
-                <div>
-                    <pre>$ HGMERGE=internal:other hg evolve
+                <pre>$ HGMERGE=internal:other hg evolve
 merge:[6] fix bug 24 (v2 by bob)
 with: [7] fix bug 24 (v2 by alice)
 base: [4] fix bug 24 (v1)
 0 files updated, 1 files merged, 0 files removed, 0 files unresolved
 </pre>
-                </div>
                 <p> Figure 10 shows how Bob’s repository looks now. </p>
                 <blockquote>
                     <p> [figure SG10: only one visible head, 9:5ad6, successor to hidden 6:a360 and 7:e3f9] </p>
@@ -481,16 +411,13 @@ base: [4] fix bug 24 (v1)
                 </h3>
                 <p> If Alice and Bob are collaborating on some mutable changesets, it’s possible to get into a situation where an otherwise worthwhile changeset cannot be pushed to the public repository; it is <em>phase-divergent</em> with another changeset that was made public first. Let’s demonstrate one way this could happen. </p>
                 <p> It starts with Alice committing a bug fix. Right now, we don’t yet know if this bug fix is good enough to push to the public repository, but it’s good enough for Alice to commit. </p>
-                <div>
-                    <pre>$ cd alice
+                <pre>$ cd alice
 $ echo 'fix' &gt; file2
 $ hg commit -A -m 'fix bug 15'
 adding file2
 </pre>
-                </div>
                 <p> Now Bob has a bad idea: he decides to pull whatever Alice is working on and tweak her bug fix to his taste: </p>
-                <div>
-                    <pre>$ cd ../bob
+                <pre>$ cd ../bob
 $ hg pull -u ../alice
 [...]
 added 1 changesets with 1 changes to 1 files
@@ -498,26 +425,21 @@ added 1 changesets with 1 changes to 1 files
 $ echo 'Fix.' &gt; file2
 $ hg amend -A -m 'fix bug 15 (amended)'
 </pre>
-                </div>
                 <p> (Note the lack of communication between Alice and Bob. Failing to communicate with your colleagues is a good way to get into trouble. Nevertheless, <tt><span>evolve</span></tt> can usually sort things out, as we will see.) </p>
                 <blockquote>
                     <p> [figure SG06: Bob’s repo with one amendment] </p>
                 </blockquote>
                 <p> After some testing, Alice realizes her bug fix is just fine as it is: no need for further polishing and amending, this changeset is ready to publish. </p>
-                <div>
-                    <pre>$ cd ../alice
+                <pre>$ cd ../alice
 $ hg push
 [...]
 added 1 changesets with 1 changes to 1 files
 </pre>
-                </div>
                 <p> This introduces a contradiction: in Bob’s repository, changeset 2:e011 (his copy of Alice’s fix) is obsolete, since Bob amended it. But in Alice’s repository (and the <tt><span>public</span></tt> repository), that changeset is public: it is immutable, carved in stone for all eternity. No changeset can be both obsolete and public, so Bob is in for a surprise the next time he pulls from <tt><span>public</span></tt>: </p>
-                <div>
-                    <pre>$ cd ../bob
+                <pre>$ cd ../bob
 $ hg pull -q -u
 1 new phase-divergent changesets
 </pre>
-                </div>
                 <p> Figure 7 shows what just happened to Bob’s repository: changeset 2:e011 is now public, so it can’t be obsolete. When that changeset was obsolete, it made perfect sense for it to have a successor, namely Bob’s amendment of Alice’s fix (changeset 4:fe88). But it’s illogical for a public changeset to have a successor, so 4:fe88 is troubled: it has become <em>bumped</em>. </p>
                 <blockquote>
                     <p> [figure SG07: 2:e011 now public not obsolete, 4:fe88 now bumped] </p>

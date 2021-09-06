@@ -441,10 +441,12 @@ Readability.prototype = {
 
   _simplifyNestedElements: function(articleContent) {
     var node = articleContent;
-    let blockTags = ["DIV", "SECTION", "ARTICLE", "MAIN"];
+    var blockTagsToSimplify = ["DIV", "SECTION", "ARTICLE", "MAIN", "P"];
+    var inlineTagsToSimplify = ["A", "U", "I", "B"];
+    var blockTags = [...blockTagsToSimplify, "HEADER", "FIGURE", "UL", "OL", "TABLE", "PRE", "H2", "H3", "H4", "H5", "H6"];
 
     while (node) {
-      if (node.parentNode && blockTags.includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
+      if (node.parentNode && blockTagsToSimplify.includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
         if (this._isElementWithoutContent(node)) {
           node = this._removeAndGetNext(node);
           continue;
@@ -457,6 +459,18 @@ Readability.prototype = {
           node = child;
           continue;
         }
+      } else if (node.tagName === "SPAN" && this._hasSingleTagInsideElement(node, "SPAN", ...inlineTagsToSimplify, ...blockTags)) {
+        var spanChild = node.children[0];
+        node.parentNode.replaceChild(spanChild, node);
+        node = spanChild.parentNode;
+        continue;
+      } else if (inlineTagsToSimplify.includes(node.tagName) && this._hasSingleTagInsideElement(node, ...blockTags)) {
+        var blockChild = node.children[0];
+        Array.from(blockChild.childNodes).forEach(grandChild => {
+          node.appendChild(grandChild);
+        });
+        node.removeChild(blockChild);
+        continue;
       }
 
       node = this._getNextNode(node);
